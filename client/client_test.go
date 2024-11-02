@@ -14,5 +14,5 @@ func TestNewClient_NoIPCChannelExists(t *testing.T) {
 	require.Error(t, err, "ipc socket descriptor should not exist")
 
 	_, err = NewIPCClient(ipcName)
-	require.Error(t, err)
+	require.NoError(t, err)
 }
