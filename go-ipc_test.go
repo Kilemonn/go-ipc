@@ -10,6 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// End to end connection and data read and write.
 func TestReadAndWrite(t *testing.T) {
 	ipcChannelName := "TestReadAndWrite"
 	svr, err := server.NewIPCServer(ipcChannelName, nil)
@@ -36,6 +37,7 @@ func TestReadAndWrite(t *testing.T) {
 	require.Equal(t, content, string(b))
 }
 
+// Understand behaviour of read even when the connection has not been accepted by the server.
 func TestRead_WithoutBeingAccepted(t *testing.T) {
 	ipcName := "TestRead_WithoutBeingAccepted"
 	server, err := server.NewIPCServer(ipcName, nil)
@@ -52,6 +54,7 @@ func TestRead_WithoutBeingAccepted(t *testing.T) {
 	require.Equal(t, 0, n)
 }
 
+// Ensure that [io.Reader.Read] attempts will timeout and return [io.EOF] if there no data to read.
 func TestRead_AcceptedWithNoData(t *testing.T) {
 	ipcName := "TestRead_AcceptedWithNoData"
 	server, err := server.NewIPCServer(ipcName, nil)
@@ -76,6 +79,8 @@ func TestRead_AcceptedWithNoData(t *testing.T) {
 	require.Equal(t, 0, n)
 }
 
+// Ensure that [io.Writer.Write] will be able to be sent from a client, even when not accepted yet by
+// the server. And once the server accepts the data can be read.
 func TestWrite_BeforeAccept(t *testing.T) {
 	ipcName := "TestWrite_BeforeAccept"
 	server, err := server.NewIPCServer(ipcName, nil)

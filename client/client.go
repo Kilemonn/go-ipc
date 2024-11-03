@@ -10,7 +10,8 @@ import (
 
 // IPCClient which implements the [io.ReadWriteCloser] interface. Effectively wrapping the [net.Conn] object.
 type IPCClient struct {
-	Conn        net.Conn
+	Conn net.Conn
+	// A timeout applied at each read attempt, you can set this to 0 to wait indefinitely to make the call blocking
 	ReadTimeout time.Duration
 }
 

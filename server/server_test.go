@@ -7,8 +7,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// Ensure when a server isn't already listening on the requested channel that we can successfully
+// create the server.
 func TestNewServer_DoesNotExist_NoOverride(t *testing.T) {
-	ipcName := "TestNewServer_DoesNotExist_NoOverride"
+	ipcName := "TestNewServer_DoesNotExist"
 	svr, err := NewIPCServer(ipcName, nil)
 	require.NoError(t, err)
 
@@ -16,6 +18,8 @@ func TestNewServer_DoesNotExist_NoOverride(t *testing.T) {
 	require.NoError(t, err)
 }
 
+// Ensure that when we attempt to accept a new connection and none are incoming,
+// that we timeout and receive an error.
 func TestAccept_WithNoClientAndTimeout(t *testing.T) {
 	ipcName := "TestAccept_WithNoClient"
 	server, err := NewIPCServer(ipcName, nil)
