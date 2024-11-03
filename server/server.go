@@ -2,6 +2,7 @@ package server
 
 import (
 	"net"
+	"os"
 	"time"
 
 	"github.com/Kilemonn/go-ipc/client"
@@ -12,12 +13,12 @@ import (
 type IPCServer struct {
 	IpcChannelName string
 	config         server_config.IPCServerConfig
-	listener       net.Listener
+	listener       *net.UnixListener
 }
 
 func NewIPCServer(ipcChannelName string, config *server_config.IPCServerConfig) (*IPCServer, error) {
 	if config == nil {
-		config = &server_config.IPCServerConfig{}
+		config = server_config.DefaultIPCServerConfig()
 	}
 
 	server := &IPCServer{
@@ -29,7 +30,18 @@ func NewIPCServer(ipcChannelName string, config *server_config.IPCServerConfig) 
 
 func (s *IPCServer) initialiseServer() (err error) {
 	descriptor := consts.UNIX_PATH_PREFIX + s.IpcChannelName + consts.UNIX_SOCKET_SUFFIX
-	s.listener, err = net.Listen("unix", descriptor)
+	addr, err := net.ResolveUnixAddr("unix", descriptor)
+	if err != nil {
+		return err
+	}
+	// If override is enabled we will just remove the descriptor before attempting to listen on it
+	if s.config.Override {
+		err = os.Remove(descriptor)
+		if err != nil {
+			return err
+		}
+	}
+	s.listener, err = net.ListenUnix("unix", addr)
 	return err
 }
 
@@ -38,7 +50,7 @@ func (s *IPCServer) Close() error {
 }
 
 func (s *IPCServer) Accept(timeOut time.Duration) (client.IPCClient, error) {
-	// TODO: Accept timeout
+	s.listener.SetDeadline(time.Now().Add(timeOut))
 	conn, err := s.listener.Accept()
 	if err != nil {
 		return client.IPCClient{}, err

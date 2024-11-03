@@ -7,6 +7,7 @@ import (
 )
 
 func TestDefaultConfig(t *testing.T) {
-	config := IPCServerConfig{}
+	config := DefaultIPCServerConfig()
+	require.NotNil(t, config)
 	require.False(t, config.Override)
 }
