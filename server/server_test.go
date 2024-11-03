@@ -60,3 +60,9 @@ func TestNewServer_WithOverrideButDoesntExist(t *testing.T) {
 	require.NoError(t, err)
 	server.Close()
 }
+
+func TestNewServer_EmptyStringAsChannelName(t *testing.T) {
+	ipcChannel := "  	"
+	_, err := NewIPCServer(ipcChannel, nil)
+	require.Error(t, err)
+}

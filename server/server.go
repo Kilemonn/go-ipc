@@ -1,12 +1,18 @@
 package server
 
 import (
+	"errors"
 	"net"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/Kilemonn/go-ipc/client"
 	"github.com/Kilemonn/go-ipc/consts"
+)
+
+var (
+	ErrInvalidChannelName = errors.New("channel name must not be an empty string")
 )
 
 type IPCServer struct {
@@ -16,10 +22,13 @@ type IPCServer struct {
 }
 
 func NewIPCServer(ipcChannelName string, config *IPCServerConfig) (*IPCServer, error) {
+	if len(strings.TrimSpace(ipcChannelName)) == 0 {
+		return &IPCServer{}, ErrInvalidChannelName
+	}
+
 	if config == nil {
 		config = DefaultIPCServerConfig()
 	}
-
 	server := &IPCServer{
 		IpcChannelName: ipcChannelName,
 		config:         *config,
