@@ -23,6 +23,7 @@ func TestReadAndWrite(t *testing.T) {
 
 	accepted, err := svr.Accept(time.Millisecond * 1000)
 	require.NoError(t, err)
+	defer accepted.Close()
 
 	content := "some-data"
 	n, err := client.Write([]byte(content))
