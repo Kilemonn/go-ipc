@@ -5,9 +5,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/Kilemonn/golang-ipc/client"
-	"github.com/Kilemonn/golang-ipc/consts"
-	server_config "github.com/Kilemonn/golang-ipc/server/config"
+	"github.com/Kilemonn/go-ipc/client"
+	"github.com/Kilemonn/go-ipc/consts"
+	server_config "github.com/Kilemonn/go-ipc/server/config"
 )
 
 type IPCServer struct {

@@ -1,11 +1,11 @@
-package golangipc
+package goipc
 
 import (
 	"testing"
 	"time"
 
-	"github.com/Kilemonn/golang-ipc/client"
-	"github.com/Kilemonn/golang-ipc/server"
+	"github.com/Kilemonn/go-ipc/client"
+	"github.com/Kilemonn/go-ipc/server"
 	"github.com/stretchr/testify/require"
 )
 

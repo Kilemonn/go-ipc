@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/Kilemonn/golang-ipc/consts"
+	"github.com/Kilemonn/go-ipc/consts"
 	"github.com/stretchr/testify/require"
 )
 

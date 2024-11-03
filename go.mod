@@ -1,4 +1,4 @@
-module github.com/Kilemonn/golang-ipc
+module github.com/Kilemonn/go-ipc
 
 go 1.23.2
 

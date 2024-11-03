@@ -5,7 +5,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/Kilemonn/golang-ipc/consts"
+	"github.com/Kilemonn/go-ipc/consts"
 )
 
 const (
