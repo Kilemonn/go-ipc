@@ -34,13 +34,13 @@ func NewIPCClientFromConnection(conn net.Conn) IPCClient {
 }
 
 // Close wraps [net.Conn.Close].
-func (c *IPCClient) Close() error {
+func (c IPCClient) Close() error {
 	return c.Conn.Close()
 }
 
 // If [IPCClient.SetReadTimeout] is greater than 0, than a read deadline will be set. Allowing this call to block only for the provided
 // period of time before returning 0, and [io.EOF] if there is no result read in that time.
-func (c *IPCClient) Read(b []byte) (n int, err error) {
+func (c IPCClient) Read(b []byte) (n int, err error) {
 	c.Conn.SetDeadline(time.Now().Add(c.ReadTimeout))
 	n, err = c.Conn.Read(b)
 	if err != nil {
@@ -53,6 +53,6 @@ func (c *IPCClient) Read(b []byte) (n int, err error) {
 }
 
 // Write wraps [net.Conn.Write].
-func (c *IPCClient) Write(p []byte) (n int, err error) {
+func (c IPCClient) Write(p []byte) (n int, err error) {
 	return c.Conn.Write(p)
 }

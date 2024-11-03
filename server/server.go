@@ -55,13 +55,13 @@ func (s *IPCServer) initialiseServer() (err error) {
 }
 
 // Close wraps [net.UnixListener.Close].
-func (s *IPCServer) Close() error {
+func (s IPCServer) Close() error {
 	return s.listener.Close()
 }
 
 // Accept acccepts the next incoming connection, the provided
 // timeout can be set to 0 to make this a blocking call.
-func (s *IPCServer) Accept(timeOut time.Duration) (client.IPCClient, error) {
+func (s IPCServer) Accept(timeOut time.Duration) (client.IPCClient, error) {
 	s.listener.SetDeadline(time.Now().Add(timeOut))
 	conn, err := s.listener.Accept()
 	if err != nil {
