@@ -15,6 +15,7 @@ type IPCClient struct {
 	ReadTimeout time.Duration
 }
 
+// NewIPCClient creates a new [IPCClient] connected to the provided channel name.
 func NewIPCClient(ipcChannelName string) (IPCClient, error) {
 	descriptor := consts.ChannelPathPrefix + ipcChannelName + consts.ChannelSocketSuffix
 	conn, err := net.Dial("unix", descriptor)
@@ -24,6 +25,7 @@ func NewIPCClient(ipcChannelName string) (IPCClient, error) {
 	return NewIPCClientFromConnection(conn), nil
 }
 
+// NewIPCClientFromConnection wraps a [net.Conn], used by the [IPCServer] when accepting new connections.
 func NewIPCClientFromConnection(conn net.Conn) IPCClient {
 	return IPCClient{
 		Conn:        conn,
@@ -31,6 +33,7 @@ func NewIPCClientFromConnection(conn net.Conn) IPCClient {
 	}
 }
 
+// Close wraps [net.Conn.Close].
 func (c *IPCClient) Close() error {
 	return c.Conn.Close()
 }
@@ -49,6 +52,7 @@ func (c *IPCClient) Read(b []byte) (n int, err error) {
 	return
 }
 
+// Write wraps [net.Conn.Write].
 func (c *IPCClient) Write(p []byte) (n int, err error) {
 	return c.Conn.Write(p)
 }

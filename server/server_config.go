@@ -5,6 +5,7 @@ type IPCServerConfig struct {
 	Override bool
 }
 
+// DefaultIPCServerConfig the config used when [nil] is provided to a new [IPCServer].
 func DefaultIPCServerConfig() *IPCServerConfig {
 	return &IPCServerConfig{}
 }

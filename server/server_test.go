@@ -61,6 +61,7 @@ func TestNewServer_WithOverrideButDoesntExist(t *testing.T) {
 	server.Close()
 }
 
+// Ensure we return an error if the channel name contains only whitespace.
 func TestNewServer_EmptyStringAsChannelName(t *testing.T) {
 	ipcChannel := "  	"
 	_, err := NewIPCServer(ipcChannel, nil)

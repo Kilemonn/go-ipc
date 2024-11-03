@@ -12,7 +12,8 @@ import (
 )
 
 var (
-	ErrInvalidChannelName = errors.New("channel name must not be an empty string")
+	// Invalid channel name, most likely when it only contains white space
+	ErrInvalidChannelName = errors.New("channel name must contain other characters besides whitespace")
 )
 
 type IPCServer struct {
@@ -21,6 +22,7 @@ type IPCServer struct {
 	listener       *net.UnixListener
 }
 
+// NewIPCServer create a new [IPCServer] at the provided channel name.
 func NewIPCServer(ipcChannelName string, config *IPCServerConfig) (*IPCServer, error) {
 	if len(strings.TrimSpace(ipcChannelName)) == 0 {
 		return &IPCServer{}, ErrInvalidChannelName
@@ -36,6 +38,7 @@ func NewIPCServer(ipcChannelName string, config *IPCServerConfig) (*IPCServer, e
 	return server, server.initialiseServer()
 }
 
+// initialiseServer will setup and listen to the provided ipc channel.
 func (s *IPCServer) initialiseServer() (err error) {
 	descriptor := consts.ChannelPathPrefix + s.IpcChannelName + consts.ChannelSocketSuffix
 	addr, err := net.ResolveUnixAddr("unix", descriptor)
@@ -51,11 +54,13 @@ func (s *IPCServer) initialiseServer() (err error) {
 	return err
 }
 
+// Close wraps [net.UnixListener.Close].
 func (s *IPCServer) Close() error {
 	return s.listener.Close()
 }
 
-// Accept the next incoming connection, the provided timeout can be set to 0 to make this a blocking call
+// Accept acccepts the next incoming connection, the provided
+// timeout can be set to 0 to make this a blocking call.
 func (s *IPCServer) Accept(timeOut time.Duration) (client.IPCClient, error) {
 	s.listener.SetDeadline(time.Now().Add(timeOut))
 	conn, err := s.listener.Accept()
