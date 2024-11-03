@@ -9,6 +9,15 @@ You can add this project as a dependency using:
 
 Once added you can setup connections as per below (error handling removed for brevity):
 ```go
+package main
+
+import (
+    "time"
+
+	"github.com/Kilemonn/go-ipc/client"
+	"github.com/Kilemonn/go-ipc/server"
+)
+
 func main() {
 	ipcChannelName := "readme-example"
 	svr, _ := server.NewIPCServer(ipcChannelName, nil)
@@ -18,7 +27,7 @@ func main() {
 	defer client.Close()
 
 	accepted, err := svr.Accept(time.Millisecond * 1000)
-    defer accepted.Close()
+	defer accepted.Close()
 
 	content := "some-data"
 	_, err := client.Write([]byte(content))
