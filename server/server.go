@@ -7,18 +7,17 @@ import (
 
 	"github.com/Kilemonn/go-ipc/client"
 	"github.com/Kilemonn/go-ipc/consts"
-	server_config "github.com/Kilemonn/go-ipc/server/config"
 )
 
 type IPCServer struct {
 	IpcChannelName string
-	config         server_config.IPCServerConfig
+	config         IPCServerConfig
 	listener       *net.UnixListener
 }
 
-func NewIPCServer(ipcChannelName string, config *server_config.IPCServerConfig) (*IPCServer, error) {
+func NewIPCServer(ipcChannelName string, config *IPCServerConfig) (*IPCServer, error) {
 	if config == nil {
-		config = server_config.DefaultIPCServerConfig()
+		config = DefaultIPCServerConfig()
 	}
 
 	server := &IPCServer{
@@ -29,17 +28,15 @@ func NewIPCServer(ipcChannelName string, config *server_config.IPCServerConfig) 
 }
 
 func (s *IPCServer) initialiseServer() (err error) {
-	descriptor := consts.UNIX_PATH_PREFIX + s.IpcChannelName + consts.UNIX_SOCKET_SUFFIX
+	descriptor := consts.ChannelPathPrefix + s.IpcChannelName + consts.ChannelSocketSuffix
 	addr, err := net.ResolveUnixAddr("unix", descriptor)
 	if err != nil {
 		return err
 	}
 	// If override is enabled we will just remove the descriptor before attempting to listen on it
 	if s.config.Override {
-		err = os.Remove(descriptor)
-		if err != nil {
-			return err
-		}
+		// Ignoring the error, since if we fail to remove it, its most likely to not exist
+		_ = os.Remove(descriptor)
 	}
 	s.listener, err = net.ListenUnix("unix", addr)
 	return err

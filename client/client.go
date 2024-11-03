@@ -15,7 +15,7 @@ type IPCClient struct {
 }
 
 func NewIPCClient(ipcChannelName string) (IPCClient, error) {
-	descriptor := consts.UNIX_PATH_PREFIX + ipcChannelName + consts.UNIX_SOCKET_SUFFIX
+	descriptor := consts.ChannelPathPrefix + ipcChannelName + consts.ChannelSocketSuffix
 	conn, err := net.Dial("unix", descriptor)
 	if err != nil {
 		return IPCClient{}, err
