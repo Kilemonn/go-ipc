@@ -2,7 +2,6 @@ package server
 
 import (
 	"net"
-	"os"
 	"time"
 
 	"github.com/Kilemonn/go-ipc/client"
@@ -21,28 +20,15 @@ func NewIPCServer(ipcChannelName string, config *server_config.IPCServerConfig) 
 		config = &server_config.IPCServerConfig{}
 	}
 
-	sever := &IPCServer{
+	server := &IPCServer{
 		IpcChannelName: ipcChannelName,
 		config:         *config,
 	}
-	return sever, sever.initialiseServer()
+	return server, server.initialiseServer()
 }
 
-func (s *IPCServer) initialiseServer() error {
+func (s *IPCServer) initialiseServer() (err error) {
 	descriptor := consts.UNIX_PATH_PREFIX + s.IpcChannelName + consts.UNIX_SOCKET_SUFFIX
-	_, err := os.Stat(descriptor)
-	if err == nil {
-		// If the file exists AND override is enabled we will remove the file
-		if s.config.Override {
-			err = os.Remove(descriptor)
-			if err != nil {
-				return err
-			}
-		} else {
-			return err
-		}
-	}
-
 	s.listener, err = net.Listen("unix", descriptor)
 	return err
 }
@@ -52,7 +38,7 @@ func (s *IPCServer) Close() error {
 }
 
 func (s *IPCServer) Accept(timeOut time.Duration) (client.IPCClient, error) {
-	// Accept timeout
+	// TODO: Accept timeout
 	conn, err := s.listener.Accept()
 	if err != nil {
 		return client.IPCClient{}, err
