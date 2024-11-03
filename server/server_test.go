@@ -10,8 +10,8 @@ import (
 // Ensure when a server isn't already listening on the requested channel that we can successfully
 // create the server.
 func TestNewServer_DoesNotExist_NoOverride(t *testing.T) {
-	ipcName := "TestNewServer_DoesNotExist"
-	svr, err := NewIPCServer(ipcName, nil)
+	ipcChannelName := "TestNewServer_DoesNotExist"
+	svr, err := NewIPCServer(ipcChannelName, nil)
 	require.NoError(t, err)
 
 	err = svr.Close()
@@ -21,8 +21,8 @@ func TestNewServer_DoesNotExist_NoOverride(t *testing.T) {
 // Ensure that when we attempt to accept a new connection and none are incoming,
 // that we timeout and receive an error.
 func TestAccept_WithNoClientAndTimeout(t *testing.T) {
-	ipcName := "TestAccept_WithNoClient"
-	server, err := NewIPCServer(ipcName, nil)
+	ipcChannelName := "TestAccept_WithNoClient"
+	server, err := NewIPCServer(ipcChannelName, nil)
 	require.NoError(t, err)
 	defer server.Close()
 

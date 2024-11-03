@@ -39,12 +39,12 @@ func TestReadAndWrite(t *testing.T) {
 
 // Understand behaviour of read even when the connection has not been accepted by the server.
 func TestRead_WithoutBeingAccepted(t *testing.T) {
-	ipcName := "TestRead_WithoutBeingAccepted"
-	server, err := server.NewIPCServer(ipcName, nil)
+	ipcChannelName := "TestRead_WithoutBeingAccepted"
+	server, err := server.NewIPCServer(ipcChannelName, nil)
 	require.NoError(t, err)
 	defer server.Close()
 
-	client, err := client.NewIPCClient(ipcName)
+	client, err := client.NewIPCClient(ipcChannelName)
 	require.NoError(t, err)
 	defer client.Close()
 
@@ -56,12 +56,12 @@ func TestRead_WithoutBeingAccepted(t *testing.T) {
 
 // Ensure that [io.Reader.Read] attempts will timeout and return [io.EOF] if there no data to read.
 func TestRead_AcceptedWithNoData(t *testing.T) {
-	ipcName := "TestRead_AcceptedWithNoData"
-	server, err := server.NewIPCServer(ipcName, nil)
+	ipcChannelName := "TestRead_AcceptedWithNoData"
+	server, err := server.NewIPCServer(ipcChannelName, nil)
 	require.NoError(t, err)
 	defer server.Close()
 
-	client, err := client.NewIPCClient(ipcName)
+	client, err := client.NewIPCClient(ipcChannelName)
 	require.NoError(t, err)
 	defer client.Close()
 
@@ -82,28 +82,28 @@ func TestRead_AcceptedWithNoData(t *testing.T) {
 // Ensure that [io.Writer.Write] will be able to be sent from a client, even when not accepted yet by
 // the server. And once the server accepts the data can be read.
 func TestWrite_BeforeAccept(t *testing.T) {
-	ipcName := "TestWrite_BeforeAccept"
-	server, err := server.NewIPCServer(ipcName, nil)
+	ipcChannelName := "TestWrite_BeforeAccept"
+	server, err := server.NewIPCServer(ipcChannelName, nil)
 	require.NoError(t, err)
 	defer server.Close()
 
-	client, err := client.NewIPCClient(ipcName)
+	client, err := client.NewIPCClient(ipcChannelName)
 	require.NoError(t, err)
 	defer client.Close()
 
 	// Writing before is successful
-	n, err := client.Write([]byte(ipcName))
+	n, err := client.Write([]byte(ipcChannelName))
 	require.NoError(t, err)
-	require.Equal(t, len(ipcName), n)
+	require.Equal(t, len(ipcChannelName), n)
 
 	accepted, err := server.Accept(time.Millisecond * 100)
 	require.NoError(t, err)
 	defer accepted.Close()
 
-	b := make([]byte, len(ipcName))
+	b := make([]byte, len(ipcChannelName))
 	n, err = accepted.Read(b)
 	require.NoError(t, err)
-	require.Equal(t, len(ipcName), n)
+	require.Equal(t, len(ipcChannelName), n)
 
-	require.Equal(t, ipcName, string(b))
+	require.Equal(t, ipcChannelName, string(b))
 }
