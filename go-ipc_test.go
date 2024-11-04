@@ -108,3 +108,45 @@ func TestWrite_BeforeAccept(t *testing.T) {
 
 	require.Equal(t, ipcChannelName, string(b))
 }
+
+// Testing how multiple connections work.
+func TestReadWrite_MultipleClients(t *testing.T) {
+	channel := "TestReadWrite_MultipleClients"
+	server, err := server.NewIPCServer(channel, nil)
+	require.NoError(t, err)
+	defer server.Close()
+
+	cli1, err := client.NewIPCClient(channel)
+	require.NoError(t, err)
+	defer cli1.Close()
+
+	accept1, err := server.Accept(time.Millisecond * 100)
+	require.NoError(t, err)
+	defer accept1.Close()
+
+	cli2, err := client.NewIPCClient(channel)
+	require.NoError(t, err)
+	defer cli2.Close()
+
+	accept2, err := server.Accept(time.Millisecond * 100)
+	require.NoError(t, err)
+	defer accept2.Close()
+
+	// Sending from cli1, making sure that accept2 cannot read it
+	data := "TestReadWrite_MultipleClients"
+	n, err := cli1.Write([]byte(data))
+	require.NoError(t, err)
+	require.Equal(t, len(data), n)
+
+	b := make([]byte, len(data))
+	n, err = accept2.Read(b)
+	require.Error(t, err)
+	require.Equal(t, io.EOF, err)
+	require.Equal(t, 0, n)
+
+	// Reading into accept1 to check it can be recieved
+	n, err = accept1.Read(b)
+	require.NoError(t, err)
+	require.Equal(t, len(data), n)
+	require.Equal(t, data, string(b))
+}
