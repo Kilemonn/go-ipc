@@ -1,4 +1,13 @@
 # go-ipc
+
+<!-- 
+go test -coverpkg ./... -coverprofile cover.out ./...
+go tool cover -html cover.out -o cover.html
+-->
+
+[![Go Coverage](https://github.com/Kilemonn/go-ipc/wiki/coverage.svg)](https://raw.githack.com/wiki/Kilemonn/go-ipc/coverage.html)
+
+
 An inter-process communication library written in Golang. Using "unix" sockets to support interprocess communication. **This also works on Windows!**
 
 ## Get started
@@ -30,14 +39,14 @@ func main() {
 	defer accepted.Close()
 
 	content := "some-data"
-	_, err := client.Write([]byte(content))
+	n, err := client.Write([]byte(content))
 
 	b := make([]byte, len(content))
-	_, err = accepted.Read(b)
+	n, err = accepted.Read(b)
 
-    if content == string(b) {
-        fmt.Println("Sent and read is the same!")
-    }
+	if content == string(b) {
+		fmt.Println("Sent and read is the same!")
+	}
 }
 ```
 
