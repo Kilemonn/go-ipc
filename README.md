@@ -5,6 +5,7 @@ go test -coverpkg ./... -coverprofile cover.out ./...
 go tool cover -html cover.out -o cover.html
 -->
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/Kilemonn/go-ipc)](https://goreportcard.com/report/github.com/Kilemonn/go-ipc)
 [![Go Coverage](https://github.com/Kilemonn/go-ipc/wiki/coverage.svg)](https://raw.githack.com/wiki/Kilemonn/go-ipc/coverage.html)
 
 
